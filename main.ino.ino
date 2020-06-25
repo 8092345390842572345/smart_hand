@@ -15,6 +15,12 @@ float deg2 = 90;
 const int stoptime = 1000;
 const float radius = 13;
 
+const float pi = 3.14;
+float a1;
+float b1;
+float a2;
+float b2;
+
 void statistics()
 {
   
@@ -31,11 +37,23 @@ float mathmodel(float x)
 {
   if(x >= 0)
   {
-    return (sqrt(pow(radius, 2) - pow(x, 2)) - radius);
+    return (sqrt(pow(radius, 2) + pow(x, 2)) - radius);
   }
   else
   {
     return (radius - sqrt(pow(radius, 2) - pow(x, 2)));
+  }
+}
+
+float backMathmodel(float x)
+{
+  if(x >= 0)
+  {
+    return (sqrt(radius * 2 * x - pow(x, 2)));
+  }
+  else
+  {
+    return (-sqrt(-pow(x, 2) - radius * 2 * x));
   }
 }
 
@@ -48,11 +66,19 @@ void setfunc()
 
 void lineMove()
 {
-  for (int i = 0; i < 30; i++)
+  for (int i = 0; i < 80; i++)
   {
-    deg1++;
-    deg2 = mathmodel(deg1);
-    Serial.println(mathmodel(deg1/20));
+    deg1 = deg1 - 1;
+    a1 = ((2 * pi * radius * deg1)/360);
+    Serial.println(a1);
+    b1 = mathmodel(a1);
+    Serial.println(b1);
+    b2 = 2 * radius - b1;
+    Serial.println(b2);
+    a2 = backMathmodel(b2);
+    Serial.println(a2);
+    deg2 = (a2 * 360) / (2 * pi * radius);
+    statistics();
     delay(100);
     setfunc();
   }
@@ -76,6 +102,6 @@ void setup()
 void loop()
 {
   setfunc();
-  statistics();
+  //statistics();
   delay(stoptime);
 }
