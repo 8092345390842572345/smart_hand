@@ -21,6 +21,19 @@ float b1;
 float a2;
 float b2;
 
+void inputDeg()
+{
+  float degsIn = Serial.parseFloat();
+  float degIn1 = floor(degsIn);
+  float degIn2 = (degsIn - degIn1) * 1000;
+  Serial.println(degIn2);
+  if (degIn2 > 180) {degIn2 = degIn2 / 10;};
+  statistics();
+  deg1 = degIn1;
+  deg2 = degIn2;
+  setfunc();
+}
+
 void statistics()
 {
   
@@ -33,7 +46,7 @@ void statistics()
   Serial.println(" ");
 }
 
-float mathmodel(float x)
+float func(float x)
 {
   if(x >= 0)
   {
@@ -45,7 +58,7 @@ float mathmodel(float x)
   }
 }
 
-float backMathmodel(float x)
+float backFunc(float x)
 {
   if(x >= 0)
   {
@@ -68,19 +81,29 @@ void lineMove()
 {
   for (int i = 0; i < 80; i++)
   {
-    deg1 = deg1 - 1;
+    deg1 = deg1 - 10;
     a1 = ((2 * pi * radius * deg1)/360);
     Serial.println(a1);
-    b1 = mathmodel(a1);
+    b1 = func(a1);
     Serial.println(b1);
-    b2 = 2 * radius - b1;
+    b2 = radius - b1;
     Serial.println(b2);
-    a2 = backMathmodel(b2);
+    a2 = backFunc(b2);
     Serial.println(a2);
     deg2 = (a2 * 360) / (2 * pi * radius);
     statistics();
-    delay(100);
+    delay(5000);
     setfunc();
+  }
+}
+
+void exp()
+{
+  for(int i = 0; i < 80; i++){
+  deg2++;
+  deg1 = 180 - deg2;
+  setfunc();
+  delay(10);
   }
 }
 
@@ -96,7 +119,8 @@ void setup()
   setfunc();
   statistics();
   delay(stoptime);
-  lineMove();
+  //lineMove();
+  //exp();
 }
 
 void loop()
@@ -104,4 +128,5 @@ void loop()
   setfunc();
   //statistics();
   delay(stoptime);
+  inputDeg();
 }
